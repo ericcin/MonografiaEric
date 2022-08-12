@@ -14,6 +14,9 @@ class Videos:
         self.imageIndexes = []
         self.readOcrIndexes = []
         self.totalFrameCount = []
+        self.federalCandidates = ['DEPUTADO FEDERAL,', 'DEPUTADO ESTADUAL', 'SENADOR', 'GOVERNADOR', 'PRESIDENTE']
+        self.numberKeys = [4, 4, 3, 2, 2]
+
 
     def open_file(self):
         pathOpen = filechooser.open_file(title="Selecione uma imagem ou vídeo", multiple=True)
