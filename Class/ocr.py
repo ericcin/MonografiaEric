@@ -13,6 +13,6 @@ class Ocr:
         for i in range(len(lstpaths)):
             self.readOcrIndexes.append(i)
             for j in range(totalframecount):
-                readocrinframes = apply_ocr(
-                    'C:\\Users\\eafs3\\Documents\\GitHub\\MonografiaEric\\Resources\\' + 'frame' + str(j) + ".jpg")
+                readocrinframes = apply_ocr('C:\\Users\\eafs3\\Documents\\GitHub\\MonografiaEric\\Resources\\' + 'frame' + str(j) + ".jpg")
                 self.readOcrIndexes.append(readocrinframes)
+                print(self.readOcrIndexes)
