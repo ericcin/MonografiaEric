@@ -10,10 +10,17 @@
 #     if item == 1:
 #         print (position)
 #
-federalCandidates = ['DEPUTADO FEDERAL,', 'DEPUTADO ESTADUAL',
+federalCandidates = ['DEPUTADO FEDERAL', 'DEPUTADO ESTADUAL',
                                   'SENADOR', 'GOVERNADOR', 'PRESIDENTE']
 numberKeys = [4, 4, 3, 2, 2]
 
-for position, item in enumerate(federalCandidates):
-    if item == 'SENADOR':
-        print(numberKeys[position])
+
+for i in federalCandidates:
+    was_message_read = False
+    if i == 'SENADOR':
+        print(i)
+        was_message_read = True
+    if was_message_read == True:
+        print("Nada")
+        break
+    print("tentando")

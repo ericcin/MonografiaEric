@@ -20,3 +20,7 @@ ocr = Ocr()
 lstPaths = ['1']
 ocr.apply_ocr_in_frames(lstPaths, 18)
 print(ocr.readOcrIndexes)
+
+print("FIM DAS LEITURAS INICIAIS")
+ocr.compare_string()
+print(ocr.allBRead)
