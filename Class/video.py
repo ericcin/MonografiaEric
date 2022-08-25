@@ -18,9 +18,6 @@ class Video:
         self.totalFrameCount = []
         self.pathOfFrames = None
 
-    def save(path, arq):
-        cv2.imwrite(path, arq)
-
     def open_file(self):
         pathOpen = filechooser.open_file(title="Selecione uma imagem ou vídeo", multiple=True)
 
@@ -63,9 +60,3 @@ class Video:
             count += 1
 
         vidcap.release()
-
-    def compare_chars(self):
-        pass
-
-    def save_data_in_bd(self):
-        pass
