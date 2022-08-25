@@ -10,6 +10,7 @@ def binary(frame):
 
     return blackAndWhiteImage
 
+
 class Video:
     def __init__(self):
         self.lstPaths = []
@@ -47,8 +48,8 @@ class Video:
 
     def save_frames(self):
         vidcap = cv2.VideoCapture(self.lstPaths[0])
-        vidcap.set(cv2.CAP_PROP_FRAME_WIDTH, 1024)
-        vidcap.set(cv2.CAP_PROP_FRAME_HEIGHT, 768)
+        vidcap.set(3, 1280)
+        vidcap.set(4, 720)
         self.totalFrameCount = int(vidcap.get(cv2.CAP_PROP_FRAME_COUNT))
         success, image = vidcap.read()
         count = 0
@@ -60,6 +61,8 @@ class Video:
             success, image = vidcap.read()
             print('Read a new frame: ', success)
             count += 1
+
+        vidcap.release()
 
     def compare_chars(self):
         pass
