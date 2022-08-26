@@ -8,6 +8,10 @@ class Video:
         self.imageIndexes = []
         self.totalFrameCount = []
         self.pathOfFrames = None
+        self.frameWEdgeRemoved = None
+        self.threshFrame = None
+        self.repairedKernelFrame = None
+        self.preResultFrame = None
 
     def open_file(self):
         pathOpen = filechooser.open_file(title="Selecione uma imagem ou vídeo", multiple=True)
@@ -34,13 +38,49 @@ class Video:
             videoframes = cv2.VideoCapture(self.lstPaths[i])
             self.imageIndexes.append(videoframes.read())
 
+    # def binary(self, frame):
+    #     originalImage = cv2.imread(frame)
+    #     grayImage = cv2.cvtColor(originalImage, cv2.COLOR_BGR2GRAY)
+    #
+    #     (thresh, blackAndWhiteImage) = cv2.threshold(grayImage, 127, 255, cv2.THRESH_BINARY)
+    #
+    #     return blackAndWhiteImage
+
     def binary(self, frame):
         originalImage = cv2.imread(frame)
-        grayImage = cv2.cvtColor(originalImage, cv2.COLOR_BGR2GRAY)
+        self.frameWEdgeRemoved = originalImage.copy()
+        gray = cv2.cvtColor(originalImage, cv2.COLOR_BGR2GRAY)
+        self.threshFrame = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
 
-        (thresh, blackAndWhiteImage) = cv2.threshold(grayImage, 127, 255, cv2.THRESH_BINARY)
+    def remove_vertical_lines(self):
+        vertical_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (1, 40))
+        remove_vertical = cv2.morphologyEx(self.threshFrame, cv2.MORPH_OPEN, vertical_kernel, iterations=2)
+        cnts = cv2.findContours(remove_vertical, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        cnts = cnts[0] if len(cnts) == 2 else cnts[1]
+        for c in cnts:
+            cv2.drawContours(self.frameWEdgeRemoved, [c], -1, (255, 255, 255), 15)
 
-        return blackAndWhiteImage
+    def remove_horizontal_lines(self):
+        horizontal_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (40, 1))
+        remove_horizontal = cv2.morphologyEx(self.threshFrame, cv2.MORPH_OPEN, horizontal_kernel, iterations=2)
+        cnts = cv2.findContours(remove_horizontal, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        cnts = cnts[0] if len(cnts) == 2 else cnts[1]
+        for c in cnts:
+            cv2.drawContours(self.frameWEdgeRemoved, [c], -1, (255, 255, 255), 5)
+
+    def repair_kernel(self):
+        self.repairedKernelFrame = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
+        removed = 255 - self.frameWEdgeRemoved
+        dilate = cv2.dilate(removed, self.repairedKernelFrame, iterations=5)
+        dilate = cv2.cvtColor(dilate, cv2.COLOR_BGR2GRAY)
+        self.preResultFrame = cv2.bitwise_and(dilate, self.threshFrame)
+
+    def finish_ip_proccess(self):
+        result = cv2.morphologyEx(self.preResultFrame, cv2.MORPH_CLOSE, self.repairedKernelFrame, iterations=5)
+        final = cv2.bitwise_and(result, self.threshFrame)
+
+        invert_final = 255 - final
+        return invert_final
 
     def save_frames(self):
         vidcap = cv2.VideoCapture(self.lstPaths[0])

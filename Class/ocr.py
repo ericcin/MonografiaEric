@@ -29,9 +29,19 @@ class Ocr:
     def apply_ocr_in_frames(self, lstpaths, totalframecount):
 
         for j in range(totalframecount):
-            readocrinframes = self.apply_ocr('C:\\Users\\eafs3\\Documents\\GitHub\\MonografiaEric\\Resources\\' +
+            #jeito inicial
+            # readocrinframes = self.apply_ocr('C:\\Users\\eafs3\\Documents\\GitHub\\MonografiaEric\\Resources\\' +
+            #                                  'frame' + str(j) + ".jpg")
+            # abaixo modo que testei pra poder aplicar OCr em arquivos na pasta antes do resources pois no main, nos
+            # meus testes, ta salvando fora da pasta Resources por algum motivo (conferir depois se na app geral ta
+            # lendo os arquivos da pasta resources mesmo
+
+            readocrinframes = self.apply_ocr('C:\\Users\\eafs3\\Documents\\GitHub\\MonografiaEric\\' +
                                              'frame' + str(j) + ".jpg")
+
             self.readOcrIndexes.append(readocrinframes)
+            self.remove_fake_numbers()
+
             print(self.readOcrIndexes)
 
     def set_federal_candidate_b_read(self, federal_candidate):
@@ -78,6 +88,15 @@ class Ocr:
                 message_not_been_read = False
         if message_not_been_read:
             self.set_message_b_read(None)
+
+    def remove_fake_numbers(self):
+        for lst_position, lst_item in enumerate(self.readOcrIndexes[-1]):
+            for lst_in_lst_position, lst_in_lst_item in enumerate(lst_item):
+                if lst_in_lst_item == "ÁUDIO ATIVADO" or "AUDIO ATIVADO":
+                    finalposition = lst_in_lst_position
+
+        for i in range(finalposition, len(self.readOcrIndexes[-1])):
+            self.readOcrIndexes[-1][i] = self.readOcrIndexes[-1][i].replace(self.readOcrIndexes[-1][i], "Fake")
 
     def find_word(self, word):
         word_not_been_read = True
