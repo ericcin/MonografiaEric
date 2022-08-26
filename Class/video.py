@@ -2,15 +2,6 @@ from plyer import filechooser
 import cv2
 
 
-def binary(frame):
-    originalImage = cv2.imread(frame)
-    grayImage = cv2.cvtColor(originalImage, cv2.COLOR_BGR2GRAY)
-
-    (thresh, blackAndWhiteImage) = cv2.threshold(grayImage, 127, 255, cv2.THRESH_BINARY)
-
-    return blackAndWhiteImage
-
-
 class Video:
     def __init__(self):
         self.lstPaths = []
@@ -43,6 +34,14 @@ class Video:
             videoframes = cv2.VideoCapture(self.lstPaths[i])
             self.imageIndexes.append(videoframes.read())
 
+    def binary(self, frame):
+        originalImage = cv2.imread(frame)
+        grayImage = cv2.cvtColor(originalImage, cv2.COLOR_BGR2GRAY)
+
+        (thresh, blackAndWhiteImage) = cv2.threshold(grayImage, 127, 255, cv2.THRESH_BINARY)
+
+        return blackAndWhiteImage
+
     def save_frames(self):
         vidcap = cv2.VideoCapture(self.lstPaths[0])
         vidcap.set(3, 1280)
@@ -53,7 +52,7 @@ class Video:
 
         for i in range(self.totalFrameCount):
             cv2.imwrite("frame"+str(count)+".jpg", image)
-            binaryimg = binary('C:\\Users\\eafs3\\Documents\\GitHub\\MonografiaEric\\Resources\\' + 'frame' + str(i) + ".jpg")
+            binaryimg = self.binary('C:\\Users\\eafs3\\Documents\\GitHub\\MonografiaEric\\Resources\\' + 'frame' + str(i) + ".jpg")
             cv2.imwrite("frame%d.jpg" % count, binaryimg)
             success, image = vidcap.read()
             print('Read a new frame: ', success)

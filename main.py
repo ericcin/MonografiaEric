@@ -17,7 +17,14 @@ ocr = Ocr()
 
 #CÓDIGO ANTERIOR SALVANDO FRAMES DE VIDEO
 
+
 lstPaths = ['1']
+
+for i in range(18):
+    patch = 'C:\\Users\\eafs3\\Documents\\GitHub\\MonografiaEric\\Resources\\' + 'frame' + str(i) + '.jpg'
+    binaryimg = testes.binary(patch)
+    cv2.imwrite("frame%d.jpg" % i, binaryimg)
+
 ocr.apply_ocr_in_frames(lstPaths, 18)
 print(ocr.readOcrIndexes)
 

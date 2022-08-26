@@ -15,10 +15,16 @@ class Ocr:
 
         self.wasCandidateRead = False
 
+    def uppercase_all_str(self, list):
+        for i in range(len(list)):
+            list[i] = list[i].upper()
+        return list
+
     def apply_ocr(self, frame):
         reader = easyocr.Reader(['pt', 'en'])
         textread = reader.readtext(frame, detail=0)
-        return str(textread)
+        textread = self.uppercase_all_str(textread)
+        return textread
 
     def apply_ocr_in_frames(self, lstpaths, totalframecount):
 
@@ -89,7 +95,7 @@ class Ocr:
         pass
 
     def compare_string(self):
-        for i in Ocr.readOcrIndexes:
+        for i in self.readOcrIndexes:
             for j in i:
                 self.find_federal_candidate(j)
 
