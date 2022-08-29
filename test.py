@@ -38,15 +38,14 @@
 #     str(list[i]).replace('1000')
 #     print(list[i])
 
-teste = [["1","2","3"],["4","5","6"],["7","8","9"]]
+teste = [["1","2","3"],["4","5","6"],["7","8","9", "10"]]
 
 # for list_position, list_position_item in enumerate(teste):
 #     for list_in_list_position, list_in_list_item in enumerate(list_position_item):
 #         if list_in_list_item == "9":
 #             print(list_position, list_in_list_position, list_in_list_item)
 
-texto = "HI LORENA"
-print (texto)
+print(len(teste))
 
-texto = texto.replace("HI LORENA", "NOVO")
-print(texto)
+
+

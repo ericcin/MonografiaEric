@@ -90,13 +90,18 @@ class Ocr:
             self.set_message_b_read(None)
 
     def remove_fake_numbers(self):
-        for lst_position, lst_item in enumerate(self.readOcrIndexes[-1]):
-            for lst_in_lst_position, lst_in_lst_item in enumerate(lst_item):
-                if lst_in_lst_item == "ÁUDIO ATIVADO" or "AUDIO ATIVADO":
-                    finalposition = lst_in_lst_position
+        last_array_item_number = len(self.readOcrIndexes) - 1
+        fake_number_find = False
 
-        for i in range(finalposition, len(self.readOcrIndexes[-1])):
-            self.readOcrIndexes[-1][i] = self.readOcrIndexes[-1][i].replace(self.readOcrIndexes[-1][i], "Fake")
+        for lst_position, lst_item in enumerate(self.readOcrIndexes[last_array_item_number]):
+            if lst_item == "ÁUDIO ATIVADO" or lst_item == "AUDIO ATIVADO":
+                finalposition = lst_position + 1
+                fake_number_find = True
+
+        if fake_number_find:
+            for i in range(finalposition, len(self.readOcrIndexes[last_array_item_number])):
+                self.readOcrIndexes[last_array_item_number][i] = self.readOcrIndexes[last_array_item_number][i].\
+                    replace(self.readOcrIndexes[last_array_item_number][i], "Fake")
 
     def find_word(self, word):
         word_not_been_read = True
