@@ -92,5 +92,8 @@ twoDigits = {
              '0-1': None, '0-2': None, '0-3': None, '0-4': None, '0-5': None, '0-6': None, '0-7': None, '0-8': None,
              '0-9': None, '0-0': None, '0-CONFIRMA': None, '0-BRANCO': None, '0-CORRIGE': None,
              }
-print(twoDigits)
+
+twoDigits['1-1'] = 2
+twoDigits['1-1'] = twoDigits['1-1'], 3
+print(twoDigits['1-1'][2])
 

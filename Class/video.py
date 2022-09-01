@@ -88,10 +88,10 @@ class Video:
 
         invert_final = 255 - final
 
-        dim = (1920, 1080)
+        dim = (1280, 720)
 
         invert_final = cv2.resize(invert_final, dim, cv2.INTER_AREA)
-        invert_final = cv2.GaussianBlur(invert_final, (11, 11), 0)
+        invert_final = cv2.GaussianBlur(invert_final, (5, 5), 0)
 
         return invert_final
 

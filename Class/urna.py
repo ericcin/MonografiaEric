@@ -3,7 +3,7 @@ class Urna:
         self.federalCandidates = ['DEPUTADO FEDERAL', 'DEPUTADO ESTADUAL',
                                   'SENADOR', 'GOVERNADOR', 'PRESIDENTE']
         self.numberKeys = [4, 5, 3, 2, 2]
-        self.digit = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "CONFIRMA", "BRANCO", "CORRIGE"]
+        self.digit = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
         self.warnings = ['NÚMERO ERRADO', 'NUMERO ERRADO']
         self.messages = ['VOTO EM BRANCO', 'EM BRANCO', 'BRANCO', 'VOTO NULO', 'FIM']
         self.words = ["NOME", "INOME"]
