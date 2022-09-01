@@ -22,7 +22,8 @@ ocr = Ocr()
 lstPaths = ['1']
 
 for i in range(18):
-    # patch = 'C:\\Users\\eafs3\\Documents\\GitHub\\MonografiaEric\\Resources\\' + 'frame' + str(i) + '.jpg'
+    # patch = 'C:\\Users\\eafs3
+    # \\Documents\\GitHub\\MonografiaEric\\Resources\\' + 'frame' + str(i) + '.jpg'
     # binaryimg = testes.binary(patch)
     # cv2.imwrite("frame%d.jpg" % i, binaryimg)
 

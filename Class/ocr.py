@@ -1,5 +1,6 @@
 from Class.urna import *
 import easyocr
+from paddleocr import PaddleOCR
 
 urna = Urna()
 
@@ -15,16 +16,29 @@ class Ocr:
 
         self.wasCandidateRead = False
 
+        self.candidateWasFound = False
+        self.warningWasFound = False
+        self.messageWasFound = False
+        self.wordWasFound = False
+
+        self.lstPosLastItemRead = 0
+
     def uppercase_all_str(self, list):
         for i in range(len(list)):
             list[i] = list[i].upper()
         return list
 
     def apply_ocr(self, frame):
-        reader = easyocr.Reader(['pt', 'en'])
+        reader = easyocr.Reader(['pt'], gpu=True)
         textread = reader.readtext(frame, detail=0)
+
         textread = self.uppercase_all_str(textread)
         return textread
+
+        # ocr = PaddleOCR(use_angle_cls=True, lang='pt', use_gpu=False)
+        # result = ocr.ocr(frame)
+
+        return result
 
     def apply_ocr_in_frames(self, lstpaths, totalframecount):
 
@@ -48,7 +62,7 @@ class Ocr:
         self.federalCandidateBRead = federal_candidate
 
     def set_number_keys_b_read(self, number_key):
-        self.numberKeysBRead = number_key
+        self.numberKeysBRead = urna.numberKeys[number_key]
 
     def set_warning_b_read(self, warning):
         self.warningBRead = warning
@@ -63,31 +77,41 @@ class Ocr:
         for i in urna.federalCandidates:
             if i == candidate:
                 self.set_federal_candidate_b_read(i)
-                self.wasCandidateRead = True
+                self.candidateWasFound = True
                 break
 
     def find_number_keys(self, candidate):
         for position, item in enumerate(urna.federalCandidates):
             if item == candidate:
                 self.set_number_keys_b_read(position)
+                break
 
     def find_warning(self, warning): # talvez isso possa ser irrelevante
-        warning_not_been_read = True
         for i in urna.warnings:
             if i == warning:
                 self.set_warning_b_read(warning)
-                warning_not_been_read = False
-        if warning_not_been_read:
+                self.warningWasFound = True
+                break
+        if not self.candidateWasFound:
             self.set_warning_b_read(None)
 
     def find_message(self, message):
-        message_not_been_read = True
         for i in urna.messages:
             if i == message:
                 self.set_message_b_read(message)
-                message_not_been_read = False
-        if message_not_been_read:
+                self.messageWasFound = True
+                break
+        if not self.messageWasFound:
             self.set_message_b_read(None)
+
+    def find_word(self, word):
+        for i in urna.words:
+            if i == word:
+                self.set_word_b_read(word)
+                self.wordWasFound = True
+                break
+        if not self.wordWasFound:
+            self.set_word_b_read(None)
 
     def remove_fake_numbers(self):
         last_array_item_number = len(self.readOcrIndexes) - 1
@@ -103,15 +127,6 @@ class Ocr:
                 self.readOcrIndexes[last_array_item_number][i] = self.readOcrIndexes[last_array_item_number][i].\
                     replace(self.readOcrIndexes[last_array_item_number][i], "Fake")
 
-    def find_word(self, word):
-        word_not_been_read = True
-        for i in urna.words:
-            if i == word:
-                self.set_word_b_read(word)
-                word_not_been_read = False
-        if word_not_been_read:
-            self.set_word_b_read(None)
-
     def set_all_b_read_array(self, federal_candidate, number_keys, warning, message, word):
         self.allBRead.append([federal_candidate, number_keys, warning, message, word])
 
@@ -119,18 +134,28 @@ class Ocr:
         pass
 
     def compare_string(self):
-        for i in self.readOcrIndexes:
-            for j in i:
-                self.find_federal_candidate(j)
+         for i in self.readOcrIndexes:
+            self.candidateWasFound = False
+            self.warningWasFound = False
+            self.messageWasFound = False
+            self.wordWasFound = False
 
-                if self.wasCandidateRead:
+            for item in i:
+                if not self.candidateWasFound:
+                    self.find_federal_candidate(item)
+                if self.candidateWasFound:
                     self.find_number_keys(self.federalCandidateBRead)
-                    self.find_warning(j)
-                    self.find_message(j)
-                    self.find_word(j)
+                if not self.warningWasFound:
+                    self.find_warning(item)
+                if not self.messageWasFound:
+                    self.find_message(item)
+                if not self.wordWasFound:
+                    self.find_word(item)
 
             self.set_all_b_read_array(self.federalCandidateBRead, self.numberKeysBRead, self.warningBRead,
                                       self.messageBRead, self.wordBRead)
+
+
 
                     # self.set_number_keys_b_read(self.numberKeys[count-1])
                     #

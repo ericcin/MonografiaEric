@@ -12,6 +12,7 @@ class Video:
         self.threshFrame = None
         self.repairedKernelFrame = None
         self.preResultFrame = None
+        self.frameBGR = None
 
     def open_file(self):
         pathOpen = filechooser.open_file(title="Selecione uma imagem ou vídeo", multiple=True)
@@ -50,6 +51,8 @@ class Video:
         originalImage = cv2.imread(frame)
         self.frameWEdgeRemoved = originalImage.copy()
         gray = cv2.cvtColor(originalImage, cv2.COLOR_BGR2GRAY)
+        #gray = cv2.blur(gray, (3, 3)) INICIAL
+        gray = cv2.blur(gray, (5, 5))
         self.threshFrame = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
 
     def remove_vertical_lines(self):
@@ -68,6 +71,10 @@ class Video:
         for c in cnts:
             cv2.drawContours(self.frameWEdgeRemoved, [c], -1, (255, 255, 255), 5)
 
+    def gray_to_bgr(self, frame):
+        frame = cv2.cvtColor(frame, cv2.COLOR_GRAY2BGR)
+        self.frameBGR = frame
+
     def repair_kernel(self):
         self.repairedKernelFrame = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
         removed = 255 - self.frameWEdgeRemoved
@@ -80,6 +87,12 @@ class Video:
         final = cv2.bitwise_and(result, self.threshFrame)
 
         invert_final = 255 - final
+
+        dim = (1920, 1080)
+
+        invert_final = cv2.resize(invert_final, dim, cv2.INTER_AREA)
+        invert_final = cv2.GaussianBlur(invert_final, (11, 11), 0)
+
         return invert_final
 
     def save_frames(self):
