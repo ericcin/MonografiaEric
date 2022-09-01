@@ -1,27 +1,34 @@
 from Class.urna import *
 import easyocr
-from paddleocr import PaddleOCR
+import re
 
 urna = Urna()
 
 class Ocr:
     def __init__(self):
         self.readOcrIndexes = []
+
         self.federalCandidateBRead = ""
         self.numberKeysBRead = 0
         self.warningBRead = ""
+        self.digitBRead = ""
         self.messageBRead = ""
         self.wordBRead = ""
         self.allBRead = []
 
+        self.justNumbersInFrame = None
+
         self.wasCandidateRead = False
 
         self.candidateWasFound = False
+        self.digitWasFound = False
         self.warningWasFound = False
         self.messageWasFound = False
         self.wordWasFound = False
 
         self.lstPosLastItemRead = 0
+
+
 
     def uppercase_all_str(self, list):
         for i in range(len(list)):
@@ -64,6 +71,9 @@ class Ocr:
     def set_number_keys_b_read(self, number_key):
         self.numberKeysBRead = urna.numberKeys[number_key]
 
+    def set_digit_b_read(self, digit):
+        self.digitBRead = digit
+
     def set_warning_b_read(self, warning):
         self.warningBRead = warning
 
@@ -86,13 +96,39 @@ class Ocr:
                 self.set_number_keys_b_read(position)
                 break
 
+    def find_numbers_only(self, lst):
+        all_b_read = ""
+        for i in lst:
+            all_b_read = all_b_read+i
+
+        self.justNumbersInFrame = re.sub('[^0-9]', '', all_b_read)
+
+    def find_number_digit(self, lst, digit):
+        for i in urna.digits:
+            if i == digit:
+                self.find_numbers_only(lst)
+                self.set_digit_b_read(self.justNumbersInFrame)
+                self.digitWasFound = True
+                break
+        if not self.digitWasFound:
+            self.set_digit_b_read(None)
+
+    def find_blank_digit(self, digit):
+        pass
+
+    def find_corret_digit(self, digit):
+        pass
+
+    def find_confirm_digit(self, digit):
+        pass
+
     def find_warning(self, warning): # talvez isso possa ser irrelevante
         for i in urna.warnings:
             if i == warning:
                 self.set_warning_b_read(warning)
                 self.warningWasFound = True
                 break
-        if not self.candidateWasFound:
+        if not self.warningWasFound:
             self.set_warning_b_read(None)
 
     def find_message(self, message):
@@ -118,7 +154,8 @@ class Ocr:
         fake_number_find = False
 
         for lst_position, lst_item in enumerate(self.readOcrIndexes[last_array_item_number]):
-            if lst_item == "ÁUDIO ATIVADO" or lst_item == "AUDIO ATIVADO":
+            if lst_item == "ÁUDIO ATIVADO" or lst_item == "AUDIO ATIVADO" or lst_item == "NOME" \
+                    or lst_item == "INOME" or lst_item == "INOME:" or lst_item == "NOME:":
                 finalposition = lst_position + 1
                 fake_number_find = True
 
@@ -127,8 +164,8 @@ class Ocr:
                 self.readOcrIndexes[last_array_item_number][i] = self.readOcrIndexes[last_array_item_number][i].\
                     replace(self.readOcrIndexes[last_array_item_number][i], "Fake")
 
-    def set_all_b_read_array(self, federal_candidate, number_keys, warning, message, word):
-        self.allBRead.append([federal_candidate, number_keys, warning, message, word])
+    def set_all_b_read_array(self, federal_candidate, number_keys, digit, warning, message, word):
+        self.allBRead.append([federal_candidate, number_keys, digit, warning, message, word])
 
     def make_full_b_read_list(self):
         pass
@@ -136,6 +173,7 @@ class Ocr:
     def compare_string(self):
          for i in self.readOcrIndexes:
             self.candidateWasFound = False
+            self.digitWasFound = False
             self.warningWasFound = False
             self.messageWasFound = False
             self.wordWasFound = False
@@ -145,6 +183,8 @@ class Ocr:
                     self.find_federal_candidate(item)
                 if self.candidateWasFound:
                     self.find_number_keys(self.federalCandidateBRead)
+                if not self.digitWasFound:
+                    self.find_number_digit(i, item)
                 if not self.warningWasFound:
                     self.find_warning(item)
                 if not self.messageWasFound:
@@ -152,8 +192,8 @@ class Ocr:
                 if not self.wordWasFound:
                     self.find_word(item)
 
-            self.set_all_b_read_array(self.federalCandidateBRead, self.numberKeysBRead, self.warningBRead,
-                                      self.messageBRead, self.wordBRead)
+            self.set_all_b_read_array(self.federalCandidateBRead, self.numberKeysBRead, self.digitBRead,
+                                      self.warningBRead, self.messageBRead, self.wordBRead)
 
 
 
