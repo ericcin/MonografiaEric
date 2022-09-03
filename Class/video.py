@@ -51,7 +51,6 @@ class Video:
         originalImage = cv2.imread(frame)
         self.frameWEdgeRemoved = originalImage.copy()
         gray = cv2.cvtColor(originalImage, cv2.COLOR_BGR2GRAY)
-        #gray = cv2.blur(gray, (3, 3)) INICIAL
         gray = cv2.blur(gray, (5, 5))
         self.threshFrame = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
 
@@ -70,10 +69,6 @@ class Video:
         cnts = cnts[0] if len(cnts) == 2 else cnts[1]
         for c in cnts:
             cv2.drawContours(self.frameWEdgeRemoved, [c], -1, (255, 255, 255), 5)
-
-    def gray_to_bgr(self, frame):
-        frame = cv2.cvtColor(frame, cv2.COLOR_GRAY2BGR)
-        self.frameBGR = frame
 
     def repair_kernel(self):
         self.repairedKernelFrame = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
