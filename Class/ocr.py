@@ -170,7 +170,7 @@ class Ocr:
     def make_full_b_read_list(self):
         pass
 
-    def compare_string(self):
+    def create_final_list(self):
          for i in self.readOcrIndexes:
             self.candidateWasFound = False
             self.digitWasFound = False

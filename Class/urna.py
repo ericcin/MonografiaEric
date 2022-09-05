@@ -1,3 +1,6 @@
+import pandas as pd
+from Class.ocr import *
+
 class Urna:
     def __init__(self):
         self.federalCandidates = ['DEPUTADO FEDERAL', 'DEPUTADO ESTADUAL',
@@ -7,6 +10,12 @@ class Urna:
         self.warnings = ['NÚMERO ERRADO', 'NUMERO ERRADO']
         self.messages = ['VOTO EM BRANCO', 'EM BRANCO', 'BRANCO', 'VOTO NULO', 'FIM']
         self.words = ["NOME", "INOME"]
+
+        self.numberWasEntered = False
+        self.voteWasChosen = False
+        self.currentCandidate = None
+        self.currentNumber = None
+        self.time = 0.0
 
         self.twoDigits = {
             '1-1': None, '1-2': None, '1-3': None, '1-4': None, '1-5': None, '1-6': None, '1-7': None, '1-8': None,
@@ -39,3 +48,33 @@ class Urna:
             '0-1': None, '0-2': None, '0-3': None, '0-4': None, '0-5': None, '0-6': None, '0-7': None, '0-8': None,
             '0-9': None, '0-0': None, '0-CONFIRMA': None, '0-BRANCO': None, '0-CORRIGE': None,
         }
+
+    def check_current_candidate(self, candidate):
+        pass
+
+
+    def check_if_number_was_entered(self, number):
+        if number is not None:
+            self.currentNumber = number
+        else:
+            self.currentNumber = None
+
+    def checK_if_new_number_was_entered(self, number):
+        pass
+
+    def check_if_number_was_choosed(self, number):
+        pass
+    
+    def define_time(self, frame):
+        self.time = frame * 33.3333333
+
+    def compare_digits(self,lst):
+        #for i in range(1, len(lst)):
+        currentFederalCandidate = ""
+
+        for i in range(len(lst)):
+            currentFederalCandidate = lst[i][0]
+            if i < len(lst):
+                digitOne: lst[i][2]
+                digitTwo: lst[i+1][2]
+

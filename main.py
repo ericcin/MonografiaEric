@@ -40,5 +40,5 @@ ocr.apply_ocr_in_frames(lstPaths, 18)
 print(ocr.readOcrIndexes)
 
 print("FIM DAS LEITURAS INICIAIS")
-ocr.compare_string()
+ocr.create_final_list()
 print(ocr.allBRead)

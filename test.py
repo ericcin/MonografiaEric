@@ -97,17 +97,22 @@
 # twoDigits['1-1'] = twoDigits['1-1'], 3
 # print(twoDigits['1-1'][2])
 
-import re
+# import re
+#
+# a = "dsaojdhsa2121DLKSAJ9"
+# all_b_read = ""
+#
+# for i in a:
+#     all_b_read = all_b_read + i
+#
+# justNumbersInFrame = re.sub('[^0-9]', '', all_b_read)
+#
+# print(justNumbersInFrame)
+#
+# print(justNumbersInFrame[-2])
+# print(justNumbersInFrame[-1])
 
-a = "dsaojdhsa2121DLKSAJ9"
-all_b_read = ""
+list = [[1,2,3],[11,12,13]]
 
-for i in a:
-    all_b_read = all_b_read + i
-
-justNumbersInFrame = re.sub('[^0-9]', '', all_b_read)
-
-print(justNumbersInFrame)
-
-print(justNumbersInFrame[-2])
-print(justNumbersInFrame[-1])
+for i in range(len(list)):
+    print(list[i][1])
