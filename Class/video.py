@@ -1,6 +1,9 @@
+from Class.urna import *
 from plyer import filechooser
 import cv2
 
+
+urna = Urna()
 
 class Video:
     def __init__(self):
@@ -51,7 +54,7 @@ class Video:
         originalImage = cv2.imread(frame)
         self.frameWEdgeRemoved = originalImage.copy()
         gray = cv2.cvtColor(originalImage, cv2.COLOR_BGR2GRAY)
-        gray = cv2.blur(gray, (5, 5))
+        gray = cv2.blur(gray, (3, 3))
         self.threshFrame = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
 
 
@@ -88,7 +91,7 @@ class Video:
 
         invert_final = cv2.resize(invert_final, dim, cv2.INTER_AREA)
         # tava 11, 11 se n me engao, ou era 15 15
-        invert_final = cv2.GaussianBlur(invert_final, (7, 7), 0)
+        invert_final = cv2.GaussianBlur(invert_final, (5, 5), 0)
 
         return invert_final
 

@@ -1,8 +1,6 @@
-from Class.urna import *
+from Class.video import *
 import easyocr
 import re
-
-urna = Urna()
 
 class Ocr:
     def __init__(self):

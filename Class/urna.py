@@ -1,5 +1,7 @@
+from Class.ocr import *
 import pandas as pd
 
+ocr = Ocr()
 
 class Urna:
     def __init__(self):

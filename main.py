@@ -1,9 +1,9 @@
 from Class.video import *
 from Class.ocr import *
+from Class.urna import *
 
 # testes = Video()
 video = Video()
-ocr = Ocr()
 
 video.open_file()
 print(video.lstPaths)
