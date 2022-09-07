@@ -54,6 +54,7 @@ class Video:
         gray = cv2.blur(gray, (5, 5))
         self.threshFrame = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
 
+
     def remove_vertical_lines(self):
         vertical_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (1, 40))
         remove_vertical = cv2.morphologyEx(self.threshFrame, cv2.MORPH_OPEN, vertical_kernel, iterations=2)
@@ -86,7 +87,8 @@ class Video:
         dim = (1280, 720)
 
         invert_final = cv2.resize(invert_final, dim, cv2.INTER_AREA)
-        invert_final = cv2.GaussianBlur(invert_final, (5, 5), 0)
+        # tava 11, 11 se n me engao, ou era 15 15
+        invert_final = cv2.GaussianBlur(invert_final, (7, 7), 0)
 
         return invert_final
 
@@ -94,16 +96,22 @@ class Video:
         vidcap = cv2.VideoCapture(self.lstPaths[0])
         vidcap.set(3, 1280)
         vidcap.set(4, 720)
-        self.totalFrameCount = int(vidcap.get(cv2.CAP_PROP_FRAME_COUNT))
-        success, image = vidcap.read()
-        count = 0
-
-        for i in range(self.totalFrameCount):
-            cv2.imwrite("frame"+str(count)+".jpg", image)
-            binaryimg = self.binary('C:\\Users\\eafs3\\Documents\\GitHub\\MonografiaEric\\Resources\\' + 'frame' + str(i) + ".jpg")
-            cv2.imwrite("frame%d.jpg" % count, binaryimg)
+        #self.totalFrameCount = int(vidcap.get(cv2.CAP_PROP_FRAME_COUNT))-1
+        print(self.totalFrameCount)
+        if vidcap.isOpened():
+            current_frame = 0
             success, image = vidcap.read()
-            print('Read a new frame: ', success)
-            count += 1
-
-        vidcap.release()
+            while success:
+                cv2.imwrite("frame"+str(current_frame)+".jpg", image)
+                self.binary('C:\\Users\\eafs3\\Documents\\GitHub\\MonografiaEric\\Resources\\' + 'frame' + str(current_frame) + ".jpg")
+                self.remove_vertical_lines()
+                self.remove_horizontal_lines()
+                self.repair_kernel()
+                treated_image = self.finish_ip_proccess()
+                cv2.imwrite("frame%d.jpg" % current_frame, treated_image)
+                print('Read a new frame: ', success)
+                success, image = vidcap.read()
+                current_frame += 1
+            self.totalFrameCount = current_frame
+            vidcap.release()
+        cv2.destroyAllWindows()

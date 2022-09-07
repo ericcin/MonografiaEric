@@ -1,5 +1,5 @@
 import pandas as pd
-from Class.ocr import *
+
 
 class Urna:
     def __init__(self):
@@ -12,8 +12,10 @@ class Urna:
         self.words = ["NOME", "INOME"]
 
         self.numberWasEntered = False
+        self.numberWasChanged = False
         self.voteWasChosen = False
         self.currentCandidate = None
+        self.candidateWasChanged = False
         self.currentNumber = None
         self.time = 0.0
 
@@ -49,9 +51,14 @@ class Urna:
             '0-9': None, '0-0': None, '0-CONFIRMA': None, '0-BRANCO': None, '0-CORRIGE': None,
         }
 
-    def check_current_candidate(self, candidate):
+    def check_current_candidate(self, pos):
+        #self.currentCandidate = ocr.allBRead[pos][0]
         pass
 
+
+    def check_if_candidate_was_changed(self, candidate):
+        if candidate != self.currentCandidate:
+            self.candidateWasChanged = True
 
     def check_if_number_was_entered(self, number):
         if number is not None:
@@ -59,12 +66,10 @@ class Urna:
         else:
             self.currentNumber = None
 
-    def checK_if_new_number_was_entered(self, number):
-        pass
+    def checK_if_number_was_changed(self, number):
+        if number != self.currentNumber:
+            self.numberWasChanged = True
 
-    def check_if_number_was_choosed(self, number):
-        pass
-    
     def define_time(self, frame):
         self.time = frame * 33.3333333
 

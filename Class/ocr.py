@@ -57,7 +57,7 @@ class Ocr:
             # meus testes, ta salvando fora da pasta Resources por algum motivo (conferir depois se na app geral ta
             # lendo os arquivos da pasta resources mesmo
 
-            readocrinframes = self.apply_ocr('C:\\Users\\eafs3\\Documents\\GitHub\\MonografiaEric\\' +
+            readocrinframes = self.apply_ocr('C:\\Users\\eafs3\\Documents\\GitHub\\MonografiaEric\\Resources\\' +
                                              'frame' + str(j) + ".jpg")
 
             self.readOcrIndexes.append(readocrinframes)
