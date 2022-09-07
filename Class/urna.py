@@ -19,6 +19,9 @@ class Urna:
         self.currentCandidate = None
         self.candidateWasChanged = False
         self.currentNumber = None
+        self.corrigeWasPressed = False
+        self.confirmaWasPressed = False
+
         self.time = 0.0
 
         self.twoDigits = {
@@ -53,35 +56,75 @@ class Urna:
             '0-9': None, '0-0': None, '0-CONFIRMA': None, '0-BRANCO': None, '0-CORRIGE': None,
         }
 
-    def check_current_candidate(self, pos):
-        #self.currentCandidate = ocr.allBRead[pos][0]
-        pass
+    def get_all_bread_candidate(self, pos):
+        current_all_bread_candidate = ocr.allBRead[pos][0]
+        return current_all_bread_candidate
 
+    def set_current_candidate(self, candidate):
+        self.currentCandidate = candidate
 
-    def check_if_candidate_was_changed(self, candidate):
-        if candidate != self.currentCandidate:
+    def check_if_candidate_was_changed(self, previous_candidate):
+        if previous_candidate != self.currentCandidate:
             self.candidateWasChanged = True
 
-    def check_if_number_was_entered(self, number):
-        if number is not None:
-            self.currentNumber = number
-        else:
-            self.currentNumber = None
+    def check_if_corrige_was_pressed(self, pos, previous_candidate):
+        if pos > 0:
+            if ocr.allBRead[pos][2] == None and ocr.allBRead[pos-1][2] != None and previous_candidate == self.currentCandidate:
+                self.corrigeWasPressed = True
 
-    def checK_if_number_was_changed(self, number):
+    def check_if_confirm_was_pressed(self, pos, previous_candidate):
+        if pos > 0:
+            if ocr.allBRead[pos][2] == None and ocr.allBRead[pos-1][2] != None and previous_candidate != self.currentCandidate:
+                self.confirmaWasPressed = True
+
+    def get_all_bread_numbers(self, pos):
+        current_all_bread_numbers = ocr.allBRead[pos][2]
+        return current_all_bread_numbers
+
+    def set_current_numbers(self, numbers):
+        self.currentNumber = numbers
+
+    # def check_if_number_was_entered(self, number):
+    #     if number is not None:
+    #         self.currentNumber = number
+    #     else:
+    #         self.currentNumber = None
+
+    def check_if_number_was_changed(self, number):
         if number != self.currentNumber:
             self.numberWasChanged = True
 
     def define_time(self, frame):
         self.time = frame * 33.3333333
 
-    def compare_digits(self,lst):
-        #for i in range(1, len(lst)):
-        currentFederalCandidate = ""
-
+    def compare_digits(self, lst):
         for i in range(len(lst)):
-            currentFederalCandidate = lst[i][0]
-            if i < len(lst):
-                digitOne: lst[i][2]
-                digitTwo: lst[i+1][2]
+            if i == 0:
+                current_all_bread_candidate = self.get_all_bread_candidate(i)
+                self.set_current_candidate(current_all_bread_candidate)
+
+            elif i > 0:
+                previous_candidate = self.currentCandidate
+                current_all_bread_candidate = self.get_all_bread_candidate(i)
+                self.set_current_candidate(current_all_bread_candidate)
+
+                if self.candidateWasChanged:
+                    self.check_if_corrige_was_pressed(i)
+                    if self.corrigeWasPressed:
+                        digit_two = 'corrige'
+
+
+
+
+
+            # self.checK_if_number_was_changed(ocr.allBRead[i][2])
+            # self.check_if_number_was_entered(ocr.allBRead[i][2])
+            #
+            # current_all_bread_candidate = self.check_all_bread_current_candidate(ocr.allBRead[i][0])
+            # self.check_if_candidate_was_changed()
+            # self.define_current_candidate(ocr.allBRead[i][0])
+            #
+            # if i < len(lst):
+            #     digitOne: lst[i][2]
+            #     digitTwo: lst[i+1][2]
 

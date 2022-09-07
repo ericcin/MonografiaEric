@@ -54,7 +54,8 @@ class Video:
         originalImage = cv2.imread(frame)
         self.frameWEdgeRemoved = originalImage.copy()
         gray = cv2.cvtColor(originalImage, cv2.COLOR_BGR2GRAY)
-        gray = cv2.blur(gray, (3, 3))
+        #melhor até agora foi 1,1 ou apagar
+        gray = cv2.blur(gray, (1, 1))
         self.threshFrame = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
 
 
@@ -90,8 +91,8 @@ class Video:
         dim = (1280, 720)
 
         invert_final = cv2.resize(invert_final, dim, cv2.INTER_AREA)
-        # tava 11, 11 se n me engao, ou era 15 15
-        invert_final = cv2.GaussianBlur(invert_final, (5, 5), 0)
+        # 11, 11 foi a melhor até agora
+        invert_final = cv2.GaussianBlur(invert_final, (11, 11), 0)
 
         return invert_final
 
