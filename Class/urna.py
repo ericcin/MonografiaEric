@@ -22,9 +22,11 @@ class Urna:
         self.corrigeWasPressed = False
         self.confirmaWasPressed = False
         self.currentDigit = None
+        self.currentFrame = None
         self.changeInScreen = False
 
-        self.time = 0.0
+        self.currentTime = None
+        self.timeBetweenFrames = None
 
         self.twoDigits = {
             '1-1': [None], '1-2': [None], '1-3': [None], '1-4': [None], '1-5': [None], '1-6': [None], '1-7': [None],
@@ -61,7 +63,13 @@ class Urna:
             'BRANCO-6': [None], 'BRANCO-7': [None], 'BRANCO-8': [None], 'BRANCO-9': [None], 'BRANCO-0': [None],
             'BRANCO-CONFIRMA': [None], 'BRANCO-CORRIGE': [None],
 
-            'CORRIGE-1': [None],
+            'CORRIGE-1': [None], 'CORRIGE-2': [None], 'CORRIGE-3': [None], 'CORRIGE-4': [None], 'CORRIGE-5': [None],
+            'CORRIGE-6': [None],'CORRIGE-7': [None], 'CORRIGE-8': [None], 'CORRIGE-9': [None], 'CORRIGE-0': [None],
+            'CORRIGE-CONFIRMA': [None],'CORRIGE-BRANCO': [None],
+
+            'CONFIRMA-1': [None], 'CONFIRMA-2': [None], 'CONFIRMA-3': [None], 'CONFIRMA-4': [None], 'CONFIRMA-5': [None]
+            , 'CONFIRMA-6': [None], 'CONFIRMA-7': [None], 'CONFIRMA-8': [None], 'CONFIRMA-9': [None], 'CONFIRMA-0':
+            [None], 'CONFIRMA-BRANCO': [None], 'CONFIRMA-CORRIGE': [None]
         }
 
     def get_all_bread_candidate(self, pos):
@@ -103,8 +111,19 @@ class Urna:
     #     if number != self.currentNumber:
     #         self.numberWasChanged = True
 
-    def define_time(self, frame):
-        self.time = frame * 33.3333333
+    def set_current_frame(self, frame):
+        self.currentFrame = frame
+
+    def set_time(self, current_frame, previous_frame):
+        count_frames = current_frame - previous_frame
+        self.timeBetweenFrames = count_frames * 33.3333333
+
+    def save_excel_table(self):
+        a = pd.DataFrame.from_dict(self.twoDigits, orient='index')
+
+        writer = pd.ExcelWriter('finaldata.xlsx', engine='xlsxwriter')
+        a.to_excel(writer, sheet_name='Sheet1')
+        writer.save()
 
     def set_digits(self, lst):
         for i in range(len(lst)):
@@ -116,8 +135,8 @@ class Urna:
                 previous_candidate = self.currentCandidate
                 previous_number = self.currentNumber
                 previous_digit = self.currentDigit
-                first_change_in_screen_frame = 0
-                second_change_in_screen_frame = 0
+
+                previous_frame_that_was_changed = self.currentFrame
 
                 current_all_bread_candidate = self.get_all_bread_candidate(i)
                 self.set_current_candidate(current_all_bread_candidate)
@@ -130,28 +149,29 @@ class Urna:
                 if self.corrigeWasPressed:
                     self.set_current_digit('CORRIGE')
                     self.changeInScreen = True
+                    self.set_current_frame(i+1)
 
                 self.check_if_confirm_was_pressed(i, previous_candidate)
                 if self.confirmaWasPressed:
                     self.set_current_digit('CONFIRMA')
                     self.changeInScreen = True
+                    self.set_current_frame(i+1)
 
                 if not self.corrigeWasPressed and not self.confirmaWasPressed and self.currentNumber != None \
                         and self.currentNumber != previous_number:
                     self.set_current_digit(self.currentNumber[-1])
                     self.changeInScreen = True
+                    self.set_current_frame(i+1)
 
                 if self.changeInScreen:
                     digit1 = previous_digit
                     digit2 = self.currentDigit
 
-                    #name_of_dict = "["+str(digit1)+"-"+str(digit2)+"]"
-                    self.twoDigits[str(digit1)+"-"+str(digit2)].append(self.time)
+                    self.set_time(self.currentFrame, previous_frame_that_was_changed)
+                    self.twoDigits[str(digit1)+"-"+str(digit2)].append(self.timeBetweenFrames)
 
-
-
-
-
+                if self.currentCandidate == 'SENADOR':
+                    break
 
             # self.checK_if_number_was_changed(ocr.allBRead[i][2])
             # self.check_if_number_was_entered(ocr.allBRead[i][2])

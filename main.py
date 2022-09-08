@@ -1,6 +1,10 @@
+import easyocr.config
+
 from Class.video import *
 from Class.ocr import *
 from Class.urna import *
+import time
+start_time = time.time()
 
 # testes = Video()
 video = Video()
@@ -15,6 +19,14 @@ video.save_frames()
 
 ocr.apply_ocr_in_frames(video.lstPaths, video.totalFrameCount)
 print(ocr.readOcrIndexes)
+
+ocr.create_final_list()
+print(ocr.allBRead)
+
+print ("time elapsed: {:.2f}s".format(time.time() - start_time))
+
+urna.set_digits(ocr.allBRead)
+urna.save_excel_table()
 
 #CÓDIGO ANTERIOR SALVANDO FRAMES DE VIDEO
 
@@ -35,10 +47,3 @@ print(ocr.readOcrIndexes)
 #     finalFrame = video.finish_ip_proccess()
 #
 #     cv2.imwrite("frame%d.jpg" % i, finalFrame)
-#
-# ocr.apply_ocr_in_frames(lstPaths, 18)
-# print(ocr.readOcrIndexes)
-#
-# print("FIM DAS LEITURAS INICIAIS")
-# ocr.create_final_list()
-# print(ocr.allBRead)

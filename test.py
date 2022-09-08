@@ -99,11 +99,11 @@ twoDigits = {
 for i in twoDigits:
     for j in twoDigits[i]:
         print(j)
-
-digit1 = '1'
-digit2 = 'CORRIGIR'
-name_of_dict = "["+str(digit1)+"-"+str(digit2)+"]"
-print(name_of_dict)
+#
+# digit1 = '1'
+# digit2 = 'CORRIGIR'
+# name_of_dict = "["+str(digit1)+"-"+str(digit2)+"]"
+# print(name_of_dict)
 # import re
 #
 # a = "dsaojdhsa2121DLKSAJ9"
