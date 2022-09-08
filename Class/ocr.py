@@ -67,7 +67,7 @@ class Ocr:
         self.federalCandidateBRead = federal_candidate
 
     def set_number_keys_b_read(self, number_key):
-        self.numberKeysBRead = urna.numberKeys[number_key]
+        self.numberKeysBRead = Video.urna.numberKeys[number_key]
 
     def set_digit_b_read(self, digit):
         self.digitBRead = digit
@@ -82,14 +82,14 @@ class Ocr:
         self.wordBRead = word
 
     def find_federal_candidate(self, candidate):
-        for i in urna.federalCandidates:
+        for i in Video.urna.federalCandidates:
             if i == candidate:
                 self.set_federal_candidate_b_read(i)
                 self.candidateWasFound = True
                 break
 
     def find_number_keys(self, candidate):
-        for position, item in enumerate(urna.federalCandidates):
+        for position, item in enumerate(Video.urna.federalCandidates):
             if item == candidate:
                 self.set_number_keys_b_read(position)
                 break
@@ -102,7 +102,7 @@ class Ocr:
         self.justNumbersInFrame = re.sub('[^0-9]', '', all_b_read)
 
     def find_number_digit(self, lst, digit):
-        for i in urna.digits:
+        for i in Video.urna.digits:
             if i == digit:
                 self.find_numbers_only(lst)
                 self.set_digit_b_read(self.justNumbersInFrame)
@@ -121,7 +121,7 @@ class Ocr:
         pass
 
     def find_warning(self, warning): # talvez isso possa ser irrelevante
-        for i in urna.warnings:
+        for i in Video.urna.warnings:
             if i == warning:
                 self.set_warning_b_read(warning)
                 self.warningWasFound = True
@@ -130,7 +130,7 @@ class Ocr:
             self.set_warning_b_read(None)
 
     def find_message(self, message):
-        for i in urna.messages:
+        for i in Video.urna.messages:
             if i == message:
                 self.set_message_b_read(message)
                 self.messageWasFound = True
@@ -139,7 +139,7 @@ class Ocr:
             self.set_message_b_read(None)
 
     def find_word(self, word):
-        for i in urna.words:
+        for i in Video.urna.words:
             if i == word:
                 self.set_word_b_read(word)
                 self.wordWasFound = True

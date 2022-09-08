@@ -2,11 +2,9 @@ from Class.urna import *
 from plyer import filechooser
 import cv2
 
-
-urna = Urna()
-
 class Video:
     def __init__(self):
+        self.urna = Urna()
         self.lstPaths = []
         self.imageIndexes = []
         self.totalFrameCount = []

@@ -1,8 +1,8 @@
 import easyocr.config
 
 from Class.video import *
-from Class.ocr import *
-from Class.urna import *
+#from Class.ocr import *
+#from Class.urna import Urna
 import time
 start_time = time.time()
 
@@ -17,18 +17,21 @@ print(len(video.imageIndexes[0]))
 
 video.save_frames()
 
-ocr.apply_ocr_in_frames(video.lstPaths, video.totalFrameCount)
-print(ocr.readOcrIndexes)
+video.urna.ocr.apply_ocr_in_frames(video.lstPaths, video.totalFrameCount)
+print(video.urna.ocr.readOcrIndexes)
 
-ocr.create_final_list()
-print(ocr.allBRead)
+video.urna.ocr.create_final_list()
+print(video.urna.ocr.allBRead)
 
 print ("time elapsed: {:.2f}s".format(time.time() - start_time))
 
-urna.set_digits(ocr.allBRead)
-urna.save_excel_table()
+video.urna.set_digits(video.urna.ocr.allBRead)
+video.urna.save_excel_table()
 
-#CÓDIGO ANTERIOR SALVANDO FRAMES DE VIDEO
+#CÓDIGO AUTOMATIZADO ACIMA
+
+#CÓDIGO MANUAL ABAIXO
+#lstPaths = ['1']
 
 #CODIGO MANUAL ABAIXO
 # lstPaths = ['1']

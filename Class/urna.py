@@ -1,10 +1,10 @@
 from Class.ocr import *
 import pandas as pd
 
-ocr = Ocr()
 
 class Urna:
     def __init__(self):
+        self.ocr = Ocr()
         self.federalCandidates = ['DEPUTADO FEDERAL', 'DEPUTADO ESTADUAL',
                                   'SENADOR', 'GOVERNADOR', 'PRESIDENTE']
         self.numberKeys = [4, 5, 3, 2, 2]
@@ -73,7 +73,7 @@ class Urna:
         }
 
     def get_all_bread_candidate(self, pos):
-        current_all_bread_candidate = ocr.allBRead[pos][0]
+        current_all_bread_candidate = self.ocr.allBRead[pos][0]
         return current_all_bread_candidate
 
     def set_current_candidate(self, candidate):
@@ -84,15 +84,15 @@ class Urna:
     #         self.candidateWasChanged = True
 
     def check_if_corrige_was_pressed(self, pos, previous_candidate):
-        if ocr.allBRead[pos][2] == None and ocr.allBRead[pos-1][2] != None and previous_candidate == self.currentCandidate:
+        if self.ocr.allBRead[pos][2] == None and self.ocr.allBRead[pos-1][2] != None and previous_candidate == self.currentCandidate:
             self.corrigeWasPressed = True
 
     def check_if_confirm_was_pressed(self, pos, previous_candidate):
-        if ocr.allBRead[pos][2] == None and ocr.allBRead[pos-1][2] != None and previous_candidate != self.currentCandidate:
+        if self.ocr.allBRead[pos][2] == None and self.ocr.allBRead[pos-1][2] != None and previous_candidate != self.currentCandidate:
             self.confirmaWasPressed = True
 
     def get_all_bread_numbers(self, pos):
-        current_all_bread_numbers = ocr.allBRead[pos][2]
+        current_all_bread_numbers = self.ocr.allBRead[pos][2]
         return current_all_bread_numbers
 
     def set_current_numbers(self, numbers):
