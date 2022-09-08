@@ -21,6 +21,8 @@ class Urna:
         self.currentNumber = None
         self.corrigeWasPressed = False
         self.confirmaWasPressed = False
+        self.currentDigit = None
+        self.changeInScreen = False
 
         self.time = 0.0
 
@@ -63,19 +65,17 @@ class Urna:
     def set_current_candidate(self, candidate):
         self.currentCandidate = candidate
 
-    def check_if_candidate_was_changed(self, previous_candidate):
-        if previous_candidate != self.currentCandidate:
-            self.candidateWasChanged = True
+    # def check_if_candidate_was_changed(self, previous_candidate):
+    #     if previous_candidate != self.currentCandidate:
+    #         self.candidateWasChanged = True
 
     def check_if_corrige_was_pressed(self, pos, previous_candidate):
-        if pos > 0:
-            if ocr.allBRead[pos][2] == None and ocr.allBRead[pos-1][2] != None and previous_candidate == self.currentCandidate:
-                self.corrigeWasPressed = True
+        if ocr.allBRead[pos][2] == None and ocr.allBRead[pos-1][2] != None and previous_candidate == self.currentCandidate:
+            self.corrigeWasPressed = True
 
     def check_if_confirm_was_pressed(self, pos, previous_candidate):
-        if pos > 0:
-            if ocr.allBRead[pos][2] == None and ocr.allBRead[pos-1][2] != None and previous_candidate != self.currentCandidate:
-                self.confirmaWasPressed = True
+        if ocr.allBRead[pos][2] == None and ocr.allBRead[pos-1][2] != None and previous_candidate != self.currentCandidate:
+            self.confirmaWasPressed = True
 
     def get_all_bread_numbers(self, pos):
         current_all_bread_numbers = ocr.allBRead[pos][2]
@@ -84,20 +84,23 @@ class Urna:
     def set_current_numbers(self, numbers):
         self.currentNumber = numbers
 
+    def set_current_digit(self, digit):
+        self.currentDigit = digit
+
     # def check_if_number_was_entered(self, number):
     #     if number is not None:
     #         self.currentNumber = number
     #     else:
     #         self.currentNumber = None
 
-    def check_if_number_was_changed(self, number):
-        if number != self.currentNumber:
-            self.numberWasChanged = True
+    # def check_if_number_was_changed(self, number):
+    #     if number != self.currentNumber:
+    #         self.numberWasChanged = True
 
     def define_time(self, frame):
         self.time = frame * 33.3333333
 
-    def compare_digits(self, lst):
+    def set_digits(self, lst):
         for i in range(len(lst)):
             if i == 0:
                 current_all_bread_candidate = self.get_all_bread_candidate(i)
@@ -105,13 +108,36 @@ class Urna:
 
             elif i > 0:
                 previous_candidate = self.currentCandidate
+                previous_number = self.currentNumber
+                previous_digit = self.currentDigit
+
                 current_all_bread_candidate = self.get_all_bread_candidate(i)
                 self.set_current_candidate(current_all_bread_candidate)
 
-                if self.candidateWasChanged:
-                    self.check_if_corrige_was_pressed(i)
-                    if self.corrigeWasPressed:
-                        digit_two = 'corrige'
+                current_all_bread_numbers = self.get_all_bread_numbers(i)
+                self.set_current_numbers(current_all_bread_numbers)
+
+                #if self.candidateWasChanged:
+                self.check_if_corrige_was_pressed(i, previous_candidate)
+                if self.corrigeWasPressed:
+                    self.set_current_digit('corrige')
+                    self.changeInScreen = True
+
+                self.check_if_confirm_was_pressed(i, previous_candidate)
+                if self.confirmaWasPressed:
+                    self.set_current_digit('confirma')
+                    self.changeInScreen = True
+
+                if not self.corrigeWasPressed and not self.confirmaWasPressed and self.currentNumber != None:
+                    self.set_current_digit(self.currentNumber[-1])
+                    self.changeInScreen = True
+
+                if self.changeInScreen:
+                    digit1 = previous_digit
+                    digit2 = self.currentDigit
+
+                    name_of_dict = "["+str(digit1)+"-"+str(digit2)+"]"
+
 
 
 
