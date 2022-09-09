@@ -67,6 +67,7 @@ class Ocr:
 
             self.readOcrIndexes.append(readocrinframes)
             self.remove_fake_numbers()
+            self.replace_wrong_word()
 
             print(self.readOcrIndexes)
 
@@ -110,7 +111,7 @@ class Ocr:
 
     def find_number_digit(self, lst, digit):
         for i in self.physicalDigits:
-            if i == digit:
+            if i == digit[0]:
                 self.find_numbers_only(lst)
                 self.set_digit_b_read(self.justNumbersInFrame)
                 self.digitWasFound = True
@@ -160,7 +161,8 @@ class Ocr:
 
         for lst_position, lst_item in enumerate(self.readOcrIndexes[last_array_item_number]):
             if lst_item == "ÁUDIO ATIVADO" or lst_item == "AUDIO ATIVADO" or lst_item == "NOME" \
-                    or lst_item == "INOME" or lst_item == "INOME:" or lst_item == "NOME:" or lst_item == "VOTO NULO":
+                    or lst_item == "INOME" or lst_item == "INOME:" or lst_item == "NOME:" or lst_item == "VOTO NULO"\
+                    or lst_item == "NUMERO ERRADO" or lst_item == "NÚMERO ERRADO":
                 finalposition = lst_position + 1
                 fake_number_find = True
 
@@ -168,6 +170,19 @@ class Ocr:
             for i in range(finalposition, len(self.readOcrIndexes[last_array_item_number])):
                 self.readOcrIndexes[last_array_item_number][i] = self.readOcrIndexes[last_array_item_number][i].\
                     replace(self.readOcrIndexes[last_array_item_number][i], "Fake")
+
+    def replace_wrong_word(self):
+        last_array_item_number = len(self.readOcrIndexes) - 1
+        fake_word_find = False
+
+        for lst_position, lst_item in enumerate(self.readOcrIndexes[last_array_item_number]):
+            if lst_item == "DEPUTADO ESTAQUAL" or lst_item == "DEPUTADO ESTAQDUAL" or lst_item == "DEPUTADO ESTADQUAL":
+                finalposition = lst_position
+                fake_word_find = True
+
+        if fake_word_find:
+            self.readOcrIndexes[last_array_item_number][finalposition] = self.readOcrIndexes[last_array_item_number][finalposition]. \
+                replace(self.readOcrIndexes[last_array_item_number][finalposition], "DEPUTADO ESTADUAL")
 
     def set_all_b_read_array(self, federal_candidate, number_keys, digit, warning, message, word):
         self.allBRead.append([federal_candidate, number_keys, digit, warning, message, word])

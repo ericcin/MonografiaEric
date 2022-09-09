@@ -174,7 +174,8 @@ class Urna:
 
                 if self.currentFrame != None and previous_frame_that_was_changed != None:
                     self.set_time(self.currentFrame, previous_frame_that_was_changed)
-                    self.twoDigits[str(digit1)+"-"+str(digit2)].append(self.timeBetweenFrames)
+                    if digit1 != None and digit2 != None:
+                        self.twoDigits[str(digit1)+"-"+str(digit2)].append(self.timeBetweenFrames)
 
                 if self.currentCandidate == 'SENADOR':
                     break
