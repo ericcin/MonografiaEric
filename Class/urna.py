@@ -4,7 +4,6 @@ import pandas as pd
 
 class Urna:
     def __init__(self):
-        self.ocr = Ocr()
         self.federalCandidates = ['DEPUTADO FEDERAL', 'DEPUTADO ESTADUAL',
                                   'SENADOR', 'GOVERNADOR', 'PRESIDENTE']
         self.numberKeys = [4, 5, 3, 2, 2]
@@ -13,11 +12,13 @@ class Urna:
         self.messages = ['VOTO EM BRANCO', 'EM BRANCO', 'BRANCO', 'VOTO NULO', 'FIM']
         self.words = ["NOME", "INOME"]
 
-        self.numberWasEntered = False
-        self.numberWasChanged = False
-        self.voteWasChosen = False
+        self.ocr = Ocr(self.federalCandidates, self.numberKeys, self.digits, self.warnings, self.messages, self.words)
+
+        #self.numberWasEntered = False
+        #self.numberWasChanged = False
+        #self.voteWasChosen = False
         self.currentCandidate = None
-        self.candidateWasChanged = False
+        #self.candidateWasChanged = False
         self.currentNumber = None
         self.corrigeWasPressed = False
         self.confirmaWasPressed = False
@@ -127,6 +128,10 @@ class Urna:
 
     def set_digits(self, lst):
         for i in range(len(lst)):
+            self.changeInScreen = False
+            self.corrigeWasPressed = False
+            self.confirmaWasPressed = False
+
             if i == 0:
                 current_all_bread_candidate = self.get_all_bread_candidate(i)
                 self.set_current_candidate(current_all_bread_candidate)
@@ -167,6 +172,7 @@ class Urna:
                     digit1 = previous_digit
                     digit2 = self.currentDigit
 
+                if self.currentFrame != None and previous_frame_that_was_changed != None:
                     self.set_time(self.currentFrame, previous_frame_that_was_changed)
                     self.twoDigits[str(digit1)+"-"+str(digit2)].append(self.timeBetweenFrames)
 

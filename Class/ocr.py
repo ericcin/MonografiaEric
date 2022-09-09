@@ -1,9 +1,9 @@
-from Class.video import *
 import easyocr
 import re
 
 class Ocr:
-    def __init__(self):
+    def __init__(self, federalCandidates, numberKeys, digits, warnings, messages, words):
+
         self.readOcrIndexes = []
 
         self.federalCandidateBRead = ""
@@ -13,6 +13,13 @@ class Ocr:
         self.messageBRead = ""
         self.wordBRead = ""
         self.allBRead = []
+
+        self.physicalFederalCandidates = federalCandidates
+        self.physicalNumberKeys = numberKeys
+        self.physicalDigits = digits
+        self.physicalWarnings = warnings
+        self.physicalMessages = messages
+        self.physicalWords = words
 
         self.justNumbersInFrame = None
 
@@ -67,7 +74,7 @@ class Ocr:
         self.federalCandidateBRead = federal_candidate
 
     def set_number_keys_b_read(self, number_key):
-        self.numberKeysBRead = Video.urna.numberKeys[number_key]
+        self.numberKeysBRead = self.physicalNumberKeys[number_key]
 
     def set_digit_b_read(self, digit):
         self.digitBRead = digit
@@ -82,14 +89,14 @@ class Ocr:
         self.wordBRead = word
 
     def find_federal_candidate(self, candidate):
-        for i in Video.urna.federalCandidates:
+        for i in self.physicalFederalCandidates:
             if i == candidate:
                 self.set_federal_candidate_b_read(i)
                 self.candidateWasFound = True
                 break
 
     def find_number_keys(self, candidate):
-        for position, item in enumerate(Video.urna.federalCandidates):
+        for position, item in enumerate(self.physicalFederalCandidates):
             if item == candidate:
                 self.set_number_keys_b_read(position)
                 break
@@ -102,7 +109,7 @@ class Ocr:
         self.justNumbersInFrame = re.sub('[^0-9]', '', all_b_read)
 
     def find_number_digit(self, lst, digit):
-        for i in Video.urna.digits:
+        for i in self.physicalDigits:
             if i == digit:
                 self.find_numbers_only(lst)
                 self.set_digit_b_read(self.justNumbersInFrame)
@@ -121,7 +128,7 @@ class Ocr:
         pass
 
     def find_warning(self, warning): # talvez isso possa ser irrelevante
-        for i in Video.urna.warnings:
+        for i in self.physicalWarnings:
             if i == warning:
                 self.set_warning_b_read(warning)
                 self.warningWasFound = True
@@ -130,7 +137,7 @@ class Ocr:
             self.set_warning_b_read(None)
 
     def find_message(self, message):
-        for i in Video.urna.messages:
+        for i in self.physicalMessages:
             if i == message:
                 self.set_message_b_read(message)
                 self.messageWasFound = True
@@ -139,7 +146,7 @@ class Ocr:
             self.set_message_b_read(None)
 
     def find_word(self, word):
-        for i in Video.urna.words:
+        for i in self.physicalWords:
             if i == word:
                 self.set_word_b_read(word)
                 self.wordWasFound = True
@@ -153,7 +160,7 @@ class Ocr:
 
         for lst_position, lst_item in enumerate(self.readOcrIndexes[last_array_item_number]):
             if lst_item == "ÁUDIO ATIVADO" or lst_item == "AUDIO ATIVADO" or lst_item == "NOME" \
-                    or lst_item == "INOME" or lst_item == "INOME:" or lst_item == "NOME:":
+                    or lst_item == "INOME" or lst_item == "INOME:" or lst_item == "NOME:" or lst_item == "VOTO NULO":
                 finalposition = lst_position + 1
                 fake_number_find = True
 

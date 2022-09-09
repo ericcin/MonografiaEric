@@ -4,6 +4,7 @@ from Class.video import *
 #from Class.ocr import *
 #from Class.urna import Urna
 import time
+
 start_time = time.time()
 
 # testes = Video()
