@@ -112,13 +112,18 @@ class Ocr:
     def find_number_digit(self, lst, digit):
         for i in self.physicalDigits:
             if i == digit[0]:
+                if self.justNumbersInFrame != None:
+                    previous_just_numbers_in_frame = self.justNumbersInFrame
                 self.find_numbers_only(lst)
                 self.set_digit_b_read(self.justNumbersInFrame)
                 self.digitWasFound = True
                 break
         if not self.digitWasFound:
             self.set_digit_b_read(None)
-
+        if self.digitWasFound and self.justNumbersInFrame != None:
+            if len(self.justNumbersInFrame) < len(previous_just_numbers_in_frame):
+                self.set_digit_b_read(None)
+                
     def find_blank_digit(self, digit):
         pass
 
