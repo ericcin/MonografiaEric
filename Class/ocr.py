@@ -110,6 +110,7 @@ class Ocr:
         self.justNumbersInFrame = re.sub('[^0-9]', '', all_b_read)
 
     def find_number_digit(self, lst, digit):
+        previous_just_numbers_in_frame = None
         for i in self.physicalDigits:
             if i == digit[0]:
                 if self.justNumbersInFrame != None:
@@ -120,7 +121,8 @@ class Ocr:
                 break
         if not self.digitWasFound:
             self.set_digit_b_read(None)
-        if self.digitWasFound and self.justNumbersInFrame != None:
+            # BEFORE THIS CHANGE, THE ERROR APPEAR: local variable 'previous_just_numbers_in_frame' referenced before assignment
+        if self.digitWasFound and self.justNumbersInFrame != None and previous_just_numbers_in_frame != None:
             if len(self.justNumbersInFrame) < len(previous_just_numbers_in_frame):
                 self.set_digit_b_read(None)
                 
