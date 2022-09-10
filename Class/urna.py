@@ -131,6 +131,8 @@ class Urna:
             self.changeInScreen = False
             self.corrigeWasPressed = False
             self.confirmaWasPressed = False
+            digit1 = None
+            digit2 = None
 
             if i == 0:
                 current_all_bread_candidate = self.get_all_bread_candidate(i)

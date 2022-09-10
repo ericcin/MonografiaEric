@@ -54,6 +54,12 @@ class Video:
         gray = cv2.cvtColor(originalImage, cv2.COLOR_BGR2GRAY)
         #melhor até agora foi 1,1 ou apagar
         gray = cv2.blur(gray, (1, 1))
+
+        # Código que deixa o texto bold
+        # import numpy as np
+        # kernel = np.ones((4, 4), np.uint8)
+        # gray = cv2.erode(gray, (kernel), 0)
+
         self.threshFrame = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
 
 
