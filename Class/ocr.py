@@ -23,17 +23,11 @@ class Ocr:
 
         self.justNumbersInFrame = None
 
-        self.wasCandidateRead = False
-
         self.candidateWasFound = False
         self.digitWasFound = False
         self.warningWasFound = False
         self.messageWasFound = False
         self.wordWasFound = False
-
-        self.lstPosLastItemRead = 0
-
-
 
     def uppercase_all_str(self, list):
         for i in range(len(list)):

@@ -14,11 +14,7 @@ class Urna:
 
         self.ocr = Ocr(self.federalCandidates, self.numberKeys, self.digits, self.warnings, self.messages, self.words)
 
-        #self.numberWasEntered = False
-        #self.numberWasChanged = False
-        #self.voteWasChosen = False
         self.currentCandidate = None
-        #self.candidateWasChanged = False
         self.currentNumber = None
         self.corrigeWasPressed = False
         self.confirmaWasPressed = False
@@ -26,7 +22,6 @@ class Urna:
         self.currentFrame = None
         self.changeInScreen = False
 
-        self.currentTime = None
         self.timeBetweenFrames = None
 
         self.twoDigits = {

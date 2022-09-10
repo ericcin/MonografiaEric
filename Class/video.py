@@ -13,7 +13,6 @@ class Video:
         self.threshFrame = None
         self.repairedKernelFrame = None
         self.preResultFrame = None
-        self.frameBGR = None
 
     def open_file(self):
         pathOpen = filechooser.open_file(title="Selecione uma imagem ou vídeo", multiple=True)
@@ -34,11 +33,10 @@ class Video:
         self.pathOfFrames = folderPath[0:56]
         self.lstPaths = lstPaths
 
-    def lst_frames(self):
-        for i in range (len(self.lstPaths)):
-            print("arquivo"+str(i))
-            videoframes = cv2.VideoCapture(self.lstPaths[i])
-            self.imageIndexes.append(videoframes.read())
+    def lst_frames(self, position):
+        print("arquivo"+str(position))
+        videoframes = cv2.VideoCapture(self.lstPaths[position])
+        self.imageIndexes.append(videoframes.read())
 
     # def binary(self, frame):
     #     originalImage = cv2.imread(frame)
@@ -100,8 +98,8 @@ class Video:
 
         return invert_final
 
-    def save_frames(self):
-        vidcap = cv2.VideoCapture(self.lstPaths[0])
+    def save_frames(self, position):
+        vidcap = cv2.VideoCapture(self.lstPaths[position])
         vidcap.set(3, 1280)
         vidcap.set(4, 720)
         #self.totalFrameCount = int(vidcap.get(cv2.CAP_PROP_FRAME_COUNT))-1
