@@ -106,13 +106,14 @@ class Ocr:
     def find_number_digit(self, lst, digit):
         previous_just_numbers_in_frame = None
         for i in self.physicalDigits:
-            if i == digit[0]:
-                if self.justNumbersInFrame != None:
-                    previous_just_numbers_in_frame = self.justNumbersInFrame
-                self.find_numbers_only(lst)
-                self.set_digit_b_read(self.justNumbersInFrame)
-                self.digitWasFound = True
-                break
+            if digit != None:
+                if i == digit[0]:
+                    if self.justNumbersInFrame != None:
+                        previous_just_numbers_in_frame = self.justNumbersInFrame
+                    self.find_numbers_only(lst)
+                    self.set_digit_b_read(self.justNumbersInFrame)
+                    self.digitWasFound = True
+                    break
         if not self.digitWasFound:
             self.set_digit_b_read(None)
             # BEFORE THIS CHANGE, THE ERROR APPEAR: local variable 'previous_just_numbers_in_frame' referenced before assignment
