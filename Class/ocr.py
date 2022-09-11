@@ -106,7 +106,7 @@ class Ocr:
     def find_number_digit(self, lst, digit):
         previous_just_numbers_in_frame = None
         for i in self.physicalDigits:
-            if digit != None or digit != "" or digit != " ":
+            if digit != None and digit != "" and digit != " ":
                 if i == digit[0]:
                     if self.justNumbersInFrame != None:
                         previous_just_numbers_in_frame = self.justNumbersInFrame
